@@ -1,8 +1,14 @@
 import {
   BrowserCacheLocation,
   Configuration,
+  InteractionType,
   LogLevel
 } from '@azure/msal-browser';
+
+import {
+  MsalGuardConfiguration,
+  MsalInterceptorConfiguration
+} from '@azure/msal-angular';
 
 export const tenantId =
   '0e309e18-e3ab-4256-8fcf-5608cfe52cbe';
@@ -55,4 +61,21 @@ export const loginRequest = {
     'profile',
     apiScope
   ]
+};
+
+// Mapa de recursos protegidos: se activará en el paso 3
+// (cuando el backend valide JWT). Por ahora queda vacío
+// para no forzar login automático al cargar la app.
+export const protectedResourceMap = new Map<string, Array<string>>([
+  // ['http://localhost:8080/api/pedidos', [apiScope]]
+]);
+
+export const msalGuardConfig: MsalGuardConfiguration = {
+  interactionType: InteractionType.Redirect,
+  authRequest: loginRequest
+};
+
+export const msalInterceptorConfig: MsalInterceptorConfiguration = {
+  interactionType: InteractionType.Redirect,
+  protectedResourceMap: protectedResourceMap
 };
