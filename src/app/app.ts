@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AccountInfo } from '@azure/msal-browser';
 import { MsalService } from '@azure/msal-angular';
 
@@ -7,6 +7,9 @@ import {
   loginRequest,
   redirectUri
 } from './auth-config';
+
+import { PedidoService } from './pedido.service';
+import { Pedido } from './pedido.model';
 
 @Component({
   selector: 'app-root',
@@ -22,20 +25,20 @@ export class App implements OnInit {
   cargando = true;
   mensajeError = '';
 
-  constructor(private readonly authService: MsalService) {}
+  pedidos: Pedido[] = [];
+  cargandoPedidos = false;
+  errorPedidos = '';
+
+  constructor(
+    private readonly authService: MsalService,
+    private readonly pedidoService: PedidoService,
+    private readonly cdr: ChangeDetectorRef
+  ) {}
 
   async ngOnInit(): Promise<void> {
     try {
-      /*
-       * Inicializa MSAL antes de realizar cualquier operación
-       * relacionada con la autenticación.
-       */
       await this.authService.instance.initialize();
 
-      /*
-       * Procesa la respuesta enviada por Microsoft Entra ID
-       * después de iniciar sesión.
-       */
       const resultado =
         await this.authService.instance.handleRedirectPromise();
 
@@ -51,7 +54,10 @@ export class App implements OnInit {
         'No fue posible inicializar la autenticación.';
     } finally {
       this.cargando = false;
+      this.cdr.detectChanges();
     }
+
+    this.cargarPedidos();
   }
 
   iniciarSesion(): void {
@@ -63,6 +69,8 @@ export class App implements OnInit {
 
         this.mensajeError =
           'No fue posible iniciar sesión con Microsoft.';
+
+        this.cdr.detectChanges();
       }
     });
   }
@@ -77,6 +85,28 @@ export class App implements OnInit {
 
         this.mensajeError =
           'No fue posible cerrar la sesión.';
+
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  cargarPedidos(): void {
+    this.cargandoPedidos = true;
+    this.errorPedidos = '';
+
+    this.pedidoService.getPedidos().subscribe({
+      next: (data) => {
+        this.pedidos = data;
+        this.cargandoPedidos = false;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error al obtener pedidos:', error);
+        this.errorPedidos =
+          'No fue posible cargar los pedidos desde el backend.';
+        this.cargandoPedidos = false;
+        this.cdr.detectChanges();
       }
     });
   }
