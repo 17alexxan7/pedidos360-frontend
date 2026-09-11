@@ -67,6 +67,7 @@ export const loginRequest = {
 // (cuando el backend valide JWT). Por ahora queda vacío
 // para no forzar login automático al cargar la app.
 export const protectedResourceMap = new Map<string, Array<string>>([
+   ['https://hpii3rnjq6.execute-api.us-east-1.amazonaws.com/api/pedidos', [apiScope]],
    ['http://localhost:8080/api/pedidos', [apiScope]]
 ]);
 
@@ -79,3 +80,4 @@ export const msalInterceptorConfig: MsalInterceptorConfiguration = {
   interactionType: InteractionType.Redirect,
   protectedResourceMap: protectedResourceMap
 };
+

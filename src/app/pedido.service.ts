@@ -7,7 +7,7 @@ import { Pedido } from './pedido.model';
   providedIn: 'root'
 })
 export class PedidoService {
-  private apiUrl = 'http://localhost:8080/api/pedidos';
+  private apiUrl = 'https://hpii3rnjq6.execute-api.us-east-1.amazonaws.com/api/pedidos';
 
   constructor(private http: HttpClient) {}
 
