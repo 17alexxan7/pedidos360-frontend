@@ -67,7 +67,7 @@ export const loginRequest = {
 // (cuando el backend valide JWT). Por ahora queda vacío
 // para no forzar login automático al cargar la app.
 export const protectedResourceMap = new Map<string, Array<string>>([
-  // ['http://localhost:8080/api/pedidos', [apiScope]]
+   ['http://localhost:8080/api/pedidos', [apiScope]]
 ]);
 
 export const msalGuardConfig: MsalGuardConfiguration = {
