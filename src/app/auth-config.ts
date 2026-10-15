@@ -20,7 +20,7 @@ export const authority =
   `https://login.microsoftonline.com/${tenantId}`;
 
 export const redirectUri =
-  'http://localhost:4200';
+  window.location.origin;
 
 export const apiScope =
   'api://c96eeade-7cad-46b0-979f-ca4e30aa8889/access_as_user';
